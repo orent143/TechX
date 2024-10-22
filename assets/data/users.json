@@ -1,0 +1,20 @@
+[
+  {
+    "username": "user1",
+    "password": "user123",
+    "email": "user1@example.com",
+    "address": "Davao City"
+  },
+  {
+    "username": "user2",
+    "password": "pass456",
+    "email": "user2@example.com",
+    "address": "Cebu City"
+  },
+  {
+    "username": "orent",
+    "password": "123",
+    "email": "user3@example.com",
+    "address": "SPM"
+  }
+]

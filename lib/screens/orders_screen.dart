@@ -12,7 +12,7 @@ class OrdersScreen extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('Blue-Aesthetic-Background.png'), 
+            image: AssetImage('Blue-Aesthetic-Background.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -23,7 +23,11 @@ class OrdersScreen extends StatelessWidget {
 
   Widget _buildOrderList(List<Order> orders) {
     if (orders.isEmpty) {
-      return const Center(child: Text('No orders found.'));
+      return const Center(
+          child: Text(
+        'No orders found.',
+        style: TextStyle(color: Colors.white),
+      ));
     }
 
     return ListView.builder(

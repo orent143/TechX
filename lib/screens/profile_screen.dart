@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import '../models/user.dart';
 import 'login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  final User user;
+
+  const ProfileScreen({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +13,7 @@ class ProfileScreen extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('Blue-Aesthetic-Background.png'), 
+            image: AssetImage('Blue-Aesthetic-Background.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -26,24 +29,30 @@ class ProfileScreen extends StatelessWidget {
                   child: const Icon(Icons.person, size: 50),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  'Geric Gultiano',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                Text(
+                  user.username,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  'orentgultiano.com',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                Text(
+                  user.email,
+                  style: const TextStyle(fontSize: 16, color: Colors.grey),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  'Address: Davao City',
-                  style: TextStyle(fontSize: 16),
+                Text(
+                  'Address: ${user.address}',
+                  style: const TextStyle(fontSize: 16, color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // Implement edit profile functionality here
+                  },
                   child: const Text('Edit Profile'),
                 ),
                 const SizedBox(height: 20),
@@ -51,11 +60,13 @@ class ProfileScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => const LoginScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 255, 255, 255)),
+                      backgroundColor:
+                          const Color.fromARGB(255, 255, 255, 255)),
                   child: const Text('Logout'),
                 ),
               ],

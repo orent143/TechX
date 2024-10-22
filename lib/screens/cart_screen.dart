@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 import '../models/cart.dart';
 import '../models/order.dart';
 import '../models/product.dart';
+import '../models/user.dart';
 import 'homescreen.dart';
 
 class CartScreen extends StatefulWidget {
   final List<CartItem> cartItems;
   final Function(List<Order>) onCheckout;
+  final User user; // Add user parameter
 
-  const CartScreen({super.key, required this.cartItems, required this.onCheckout});
+  const CartScreen({
+    super.key,
+    required this.cartItems,
+    required this.onCheckout,
+    required this.user, // Add user to constructor
+  });
 
   @override
   _CartScreenState createState() => _CartScreenState();
@@ -39,12 +46,15 @@ class _CartScreenState extends State<CartScreen> {
         productsWithQuantities,
       );
       orders.add(order);
-      widget.onCheckout(orders);
+      widget.onCheckout(orders); // Call the provided onCheckout function
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => HomeScreen(orders: orders),
+          builder: (context) => HomeScreen(
+              orders: orders,
+              user: widget.user,
+              onCheckout: widget.onCheckout), // Pass the onCheckout function
         ),
       );
     }
@@ -62,7 +72,7 @@ class _CartScreenState extends State<CartScreen> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('Blue-Aesthetic-Background.png'), 
+            image: AssetImage('Blue-Aesthetic-Background.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -70,8 +80,11 @@ class _CartScreenState extends State<CartScreen> {
           children: [
             Expanded(
               child: _cartItems.isEmpty
-                  ? const Center(child: Text('Your cart is empty.',style: TextStyle(color: Colors.white), 
-                  ))
+                  ? const Center(
+                      child: Text(
+                      'Your cart is empty.',
+                      style: TextStyle(color: Colors.white),
+                    ))
                   : ListView.builder(
                       itemCount: _cartItems.length,
                       itemBuilder: (context, index) {
@@ -95,8 +108,7 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-
-Widget _buildCartItem(CartItem cartItem) {
+  Widget _buildCartItem(CartItem cartItem) {
     return ListTile(
       title: Text(
         cartItem.product.name,
@@ -114,7 +126,8 @@ Widget _buildCartItem(CartItem cartItem) {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            icon: const Icon(Icons.remove, color: Colors.white), // Change icon color here
+            icon: const Icon(Icons.remove,
+                color: Colors.white), // Change icon color here
             onPressed: () {
               if (cartItem.quantity > 1) {
                 _updateQuantity(cartItem, cartItem.quantity - 1);
@@ -126,7 +139,8 @@ Widget _buildCartItem(CartItem cartItem) {
             style: const TextStyle(color: Colors.white), // Change color here
           ),
           IconButton(
-            icon: const Icon(Icons.add, color: Colors.white), // Change icon color here
+            icon: const Icon(Icons.add,
+                color: Colors.white), // Change icon color here
             onPressed: () {
               _updateQuantity(cartItem, cartItem.quantity + 1);
             },

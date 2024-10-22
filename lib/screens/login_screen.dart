@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/providers.dart';
+import 'homescreen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -13,13 +14,43 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    final userService = ref.read(userServiceProvider);
+    userService.loadUsers(); // Ensure users are loaded at start
+  }
+
   void _login() {
     final userService = ref.read(userServiceProvider);
-    final username = usernameController.text;
-    final password = passwordController.text;
+    final username = usernameController.text.trim();
+    final password = passwordController.text.trim();
 
-    if (userService.authenticate(username, password)) {
-      Navigator.pushNamed(context, '/home');
+    if (username.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter both username and password.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    final user = userService.authenticate(username, password);
+    if (user != null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomeScreen(
+            orders: [],
+            user: user,
+            onCheckout: (orders) {
+              // Define your checkout functionality here
+              print("Checkout: $orders");
+            },
+          ),
+        ),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -30,13 +61,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
- @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('njnj.png'), 
+            image: AssetImage('njnj.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -48,12 +79,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               const SizedBox(height: 40),
               _buildTextField(usernameController, 'Username'),
               const SizedBox(height: 20),
-              _buildTextField(passwordController, 'Password', obscureText: true),
+              _buildTextField(passwordController, 'Password',
+                  obscureText: true),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _login,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 4, 0, 255), 
+                  backgroundColor: const Color.fromARGB(255, 4, 0, 255),
                 ),
                 child: const Text(
                   'Login',
@@ -70,6 +102,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ),
     );
   }
+
   Widget _buildTextField(TextEditingController controller, String label,
       {bool obscureText = false}) {
     return TextField(

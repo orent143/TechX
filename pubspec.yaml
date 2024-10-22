@@ -26,6 +26,7 @@ flutter:
   assets:
     - assets/Blue-Aesthetic-Background.png
     - assets/njnj.png
+    - assets/data/users.json
 # Uncomment and modify this section to add assets
 # assets:
 #   - images/

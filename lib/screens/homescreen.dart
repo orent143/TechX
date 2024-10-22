@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/order.dart';
 import '../models/cart.dart';
 import '../models/product.dart';
-
+import '../models/user.dart'; // Import User model
 import '../services/product_service.dart';
 import '../services/providers.dart';
 import 'cart_screen.dart';
@@ -13,8 +13,15 @@ import 'profile_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   final List<Order>? orders;
+  final User user;
+  final Function(List<Order>) onCheckout; // Add onCheckout parameter
 
-  const HomeScreen({super.key, this.orders});
+  const HomeScreen({
+    super.key,
+    this.orders,
+    required this.user,
+    required this.onCheckout, // Add onCheckout to constructor
+  });
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -56,8 +63,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            CartScreen(cartItems: _cartItems, onCheckout: _checkout),
+        builder: (context) => CartScreen(
+          cartItems: _cartItems,
+          onCheckout: _checkout,
+          user: widget.user,
+        ),
       ),
     );
   }
@@ -81,14 +91,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('Blue-Aesthetic-Background.png'), 
+            image: AssetImage('Blue-Aesthetic-Background.png'),
             fit: BoxFit.cover,
           ),
         ),
         child: Column(
           children: [
             AppBar(
-              title: Text(['Products', 'Orders', 'Cart', 'Profile'][_selectedIndex]),
+              title: Text(
+                  ['Products', 'Orders', 'Cart', 'Profile'][_selectedIndex]),
               automaticallyImplyLeading: false,
             ),
             Expanded(child: _buildBody(productService)),
@@ -106,9 +117,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       case 1:
         return OrdersScreen(orders: _orders);
       case 2:
-        return CartScreen(cartItems: _cartItems, onCheckout: _checkout);
+        return CartScreen(
+            cartItems: _cartItems, onCheckout: _checkout, user: widget.user);
       default:
-        return const ProfileScreen();
+        return ProfileScreen(user: widget.user);
     }
   }
 
@@ -138,7 +150,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       onTap: _onItemTapped,
       selectedItemColor: Colors.blue,
       unselectedItemColor: Colors.black,
-      backgroundColor: Colors.transparent, 
+      backgroundColor: Colors.transparent,
     );
   }
 }
