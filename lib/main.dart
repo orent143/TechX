@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) {
           final user = ModalRoute.of(context)!.settings.arguments as User;
           return HomeScreen(
-            orders: [],
+            orders: const [],
             user: user,
             onCheckout: (orders) {
               // Define your checkout functionality here

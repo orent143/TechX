@@ -45,16 +45,29 @@ class _CartScreenState extends State<CartScreen> {
         DateTime.now().millisecondsSinceEpoch.toString(),
         productsWithQuantities,
       );
-      orders.add(order);
-      widget.onCheckout(orders); // Call the provided onCheckout function
 
+      orders.add(order); // Add the order to the list
+
+      // Call the onCheckout function with the mutable orders list
+      widget.onCheckout(List.from(orders));
+
+      // Show a SnackBar for confirmation
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Checkout successful!'),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+
+      // Navigate back to HomeScreen
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => HomeScreen(
-              orders: orders,
-              user: widget.user,
-              onCheckout: widget.onCheckout), // Pass the onCheckout function
+            orders: orders, // Pass the newly created orders
+            user: widget.user,
+            onCheckout: widget.onCheckout,
+          ),
         ),
       );
     }

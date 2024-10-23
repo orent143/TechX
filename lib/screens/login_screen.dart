@@ -42,7 +42,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => HomeScreen(
-            orders: [],
+            orders: const [],
             user: user,
             onCheckout: (orders) {
               // Define your checkout functionality here
